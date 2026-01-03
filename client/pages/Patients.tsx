@@ -102,12 +102,22 @@ export default function Patients() {
       <div className="flex-1 overflow-auto px-8 py-6">
         <PatientList
           patients={patients}
+          onEdit={handleEditPatient}
           onDelete={handleDeletePatient}
           onImport={handleImportClick}
           groupByDiagnosis={groupByDiagnosis}
         />
         <div className="h-8" />
       </div>
+
+      {/* Patient Form Modal */}
+      <PatientForm
+        patient={editingPatient}
+        allPatients={patients}
+        onSave={handleSavePatient}
+        onCancel={handleCloseForm}
+        isOpen={isFormOpen}
+      />
 
       {/* Hidden file input for Excel import */}
       <input
