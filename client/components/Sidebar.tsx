@@ -80,7 +80,7 @@ export default function Sidebar({ currentPath = "/" }: SidebarProps) {
   const isActive = (path: string) => currentPath === path;
 
   return (
-    <div className="w-64 bg-sidebar border-r border-sidebar-border h-screen flex flex-col sticky top-0">
+    <div className="w-64 bg-sidebar border-r border-sidebar-border h-screen flex flex-col">
       {/* Brand */}
       <div className="p-6 border-b border-sidebar-border">
         <Link to="/dashboard" className="flex items-center gap-2">
