@@ -2,17 +2,44 @@ import { useState, useRef } from "react";
 import { Plus, LayoutGrid } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import PatientList from "@/components/PatientList";
+import PatientForm from "@/components/PatientForm";
 import { mockPatients } from "@/data/mockPatients";
 import { Patient } from "@/types/patient";
 
 export default function Patients() {
   const [patients, setPatients] = useState<Patient[]>(mockPatients);
   const [groupByDiagnosis, setGroupByDiagnosis] = useState(false);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [editingPatient, setEditingPatient] = useState<Patient | undefined>();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleAddPatient = () => {
-    // TODO: Open add patient modal
-    console.log("Add patient clicked");
+    setEditingPatient(undefined);
+    setIsFormOpen(true);
+  };
+
+  const handleEditPatient = (patient: Patient) => {
+    setEditingPatient(patient);
+    setIsFormOpen(true);
+  };
+
+  const handleSavePatient = (patient: Patient) => {
+    if (editingPatient) {
+      // Update existing patient
+      setPatients(
+        patients.map((p) => (p.id === patient.id ? patient : p))
+      );
+    } else {
+      // Add new patient
+      setPatients([...patients, patient]);
+    }
+    setIsFormOpen(false);
+    setEditingPatient(undefined);
+  };
+
+  const handleCloseForm = () => {
+    setIsFormOpen(false);
+    setEditingPatient(undefined);
   };
 
   const handleImportClick = () => {
