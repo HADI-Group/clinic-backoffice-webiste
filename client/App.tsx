@@ -35,10 +35,15 @@ const App = () => (
             path="/patients"
             element={
               <AppLayout>
-                <PagePlaceholder
-                  title="Pasien"
-                  description="Kelola daftar pasien, cari pasien berdasarkan nama, umur, jenis kelamin, dan diagnosis."
-                />
+                <Patients />
+              </AppLayout>
+            }
+          />
+          <Route
+            path="/patients/:id"
+            element={
+              <AppLayout>
+                <PatientDetail />
               </AppLayout>
             }
           />
