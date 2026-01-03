@@ -7,6 +7,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
+import Patients from "./pages/Patients";
+import PatientDetail from "./pages/PatientDetail";
 import AppLayout from "./components/AppLayout";
 import PagePlaceholder from "./components/PagePlaceholder";
 import NotFound from "./pages/NotFound";
