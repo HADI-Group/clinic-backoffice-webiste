@@ -82,10 +82,7 @@ const App = () => (
             path="/medicine"
             element={
               <AppLayout>
-                <PagePlaceholder
-                  title="Obat"
-                  description="Kelola stok obat, catat obat masuk dan keluar, serta atur peringatan stok rendah."
-                />
+                <Medicine />
               </AppLayout>
             }
           />
