@@ -90,10 +90,7 @@ const App = () => (
             path="/transactions"
             element={
               <AppLayout>
-                <PagePlaceholder
-                  title="Transaksi"
-                  description="Catat pendapatan dan pengeluaran, kelola transaksi keuangan klinik."
-                />
+                <Transaction />
               </AppLayout>
             }
           />
