@@ -89,7 +89,7 @@ export default function Sidebar({ currentPath = "/" }: SidebarProps) {
           </div>
           <div>
             <h1 className="font-bold text-lg text-sidebar-foreground">
-              MediCare
+              Sindang Klinik
             </h1>
           </div>
         </Link>
@@ -166,7 +166,7 @@ export default function Sidebar({ currentPath = "/" }: SidebarProps) {
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-sidebar-foreground truncate">
-              Dr. Ahmad Fauzi
+              Dr. Rifky Rahmansyah
             </p>
             <p className="text-xs text-sidebar-foreground/60 truncate">
               Dokter Umum

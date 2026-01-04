@@ -52,7 +52,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
               <Menu className="w-6 h-6" />
             )}
           </Button>
-          <span className="font-semibold text-foreground">MediCare</span>
+          <span className="font-semibold text-foreground">Sindang Klinik</span>
           <div className="w-10" />
         </div>
         {children}
