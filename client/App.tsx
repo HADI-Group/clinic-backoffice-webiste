@@ -98,10 +98,7 @@ const App = () => (
             path="/reports"
             element={
               <AppLayout>
-                <PagePlaceholder
-                  title="Laporan"
-                  description="Lihat laporan harian, bulanan, dan analisis data pasien, keuangan, dan operasional."
-                />
+                <Reports />
               </AppLayout>
             }
           />
