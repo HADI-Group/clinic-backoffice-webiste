@@ -10,6 +10,7 @@ import Dashboard from "./pages/Dashboard";
 import Patients from "./pages/Patients";
 import PatientDetail from "./pages/PatientDetail";
 import MedicalRecords from "./pages/MedicalRecords";
+import MedicalRecordsList from "./pages/MedicalRecordsList";
 import AppLayout from "./components/AppLayout";
 import PagePlaceholder from "./components/PagePlaceholder";
 import NotFound from "./pages/NotFound";
