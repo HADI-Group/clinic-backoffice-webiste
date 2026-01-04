@@ -544,6 +544,55 @@ export default function PatientDetail() {
               </div>
             </div>
           </div>
+
+          {/* Medical Records Section */}
+          {medicalRecords.length > 0 && (
+            <div className="bg-white rounded-lg border border-border p-6 mb-6">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <FileText className="w-5 h-5 text-primary" />
+                  <h2 className="text-lg font-semibold text-foreground">
+                    Riwayat Rekam Medis
+                  </h2>
+                  <span className="text-sm font-medium bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
+                    {medicalRecords.length} rekam medis
+                  </span>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => navigate(`/medical-records/${id}`)}
+                >
+                  Lihat Semua
+                </Button>
+              </div>
+
+              {/* Timeline preview */}
+              <div className="max-h-96 overflow-y-auto">
+                <MedicalRecordTimeline
+                  records={latestRecords}
+                  onSelectRecord={() => navigate(`/medical-records/${id}`)}
+                />
+              </div>
+            </div>
+          )}
+
+          {medicalRecords.length === 0 && (
+            <div className="bg-white rounded-lg border border-dashed border-border p-6 mb-6 text-center">
+              <FileText className="w-12 h-12 text-muted-foreground mx-auto mb-3 opacity-50" />
+              <p className="text-muted-foreground mb-4">
+                Belum ada rekam medis untuk pasien ini
+              </p>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate(`/medical-records/${id}`)}
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Buat Rekam Medis Pertama
+              </Button>
+            </div>
+          )}
         </div>
 
         <div className="h-8" />
