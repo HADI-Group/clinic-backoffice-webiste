@@ -23,6 +23,13 @@ export default function PatientDetail() {
   );
   const [formData, setFormData] = useState<Patient | null>(patient);
 
+  // Get medical records for this patient
+  const medicalRecords = useMemo(
+    () => (id ? getMedicalRecordsByPatientId(id) : []),
+    [id]
+  );
+  const latestRecords = medicalRecords.slice(0, 3); // Show last 3 records
+
   if (!patient) {
     return (
       <div className="flex-1 flex flex-col bg-gray-50">
