@@ -74,10 +74,7 @@ const App = () => (
             path="/queue"
             element={
               <AppLayout>
-                <PagePlaceholder
-                  title="Antrian"
-                  description="Kelola antrian pasien, check-in pasien, dan pantau status antrian."
-                />
+                <Queue />
               </AppLayout>
             }
           />
