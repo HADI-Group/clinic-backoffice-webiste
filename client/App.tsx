@@ -49,13 +49,10 @@ const App = () => (
             }
           />
           <Route
-            path="/medical-records"
+            path="/medical-records/:patientId"
             element={
               <AppLayout>
-                <PagePlaceholder
-                  title="Rekam Medis"
-                  description="Buat dan kelola rekam medis pasien dengan riwayat konsultasi, diagnosis, dan terapi."
-                />
+                <MedicalRecords />
               </AppLayout>
             }
           />
