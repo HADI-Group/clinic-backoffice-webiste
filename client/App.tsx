@@ -9,6 +9,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import Patients from "./pages/Patients";
 import PatientDetail from "./pages/PatientDetail";
+import MedicalRecords from "./pages/MedicalRecords";
 import AppLayout from "./components/AppLayout";
 import PagePlaceholder from "./components/PagePlaceholder";
 import NotFound from "./pages/NotFound";
