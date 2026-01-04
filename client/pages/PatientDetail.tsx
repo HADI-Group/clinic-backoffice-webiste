@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Edit, Trash2, FileText } from "lucide-react";
+import { ArrowLeft, Edit, Trash2, FileText, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import MedicalRecordTimeline from "@/components/MedicalRecordTimeline";
 import { mockPatients } from "@/data/mockPatients";
