@@ -50,6 +50,14 @@ const App = () => (
             }
           />
           <Route
+            path="/medical-records"
+            element={
+              <AppLayout>
+                <MedicalRecordsList />
+              </AppLayout>
+            }
+          />
+          <Route
             path="/medical-records/:patientId"
             element={
               <AppLayout>
