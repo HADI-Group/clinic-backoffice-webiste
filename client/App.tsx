@@ -72,73 +72,91 @@ const App = () => (
           <Route
             path="/patients"
             element={
-              <AppLayout>
-                <Patients />
-              </AppLayout>
+              <ProtectedRoute>
+                <AppLayout>
+                  <Patients />
+                </AppLayout>
+              </ProtectedRoute>
             }
           />
           <Route
             path="/patients/:id"
             element={
-              <AppLayout>
-                <PatientDetail />
-              </AppLayout>
+              <ProtectedRoute>
+                <AppLayout>
+                  <PatientDetail />
+                </AppLayout>
+              </ProtectedRoute>
             }
           />
           <Route
             path="/medical-records"
             element={
-              <AppLayout>
-                <MedicalRecordsList />
-              </AppLayout>
+              <ProtectedRoute>
+                <AppLayout>
+                  <MedicalRecordsList />
+                </AppLayout>
+              </ProtectedRoute>
             }
           />
           <Route
             path="/medical-records/:patientId"
             element={
-              <AppLayout>
-                <MedicalRecords />
-              </AppLayout>
+              <ProtectedRoute>
+                <AppLayout>
+                  <MedicalRecords />
+                </AppLayout>
+              </ProtectedRoute>
             }
           />
           <Route
             path="/queue"
             element={
-              <AppLayout>
-                <Queue />
-              </AppLayout>
+              <ProtectedRoute>
+                <AppLayout>
+                  <Queue />
+                </AppLayout>
+              </ProtectedRoute>
             }
           />
           <Route
             path="/medicine"
             element={
-              <AppLayout>
-                <Medicine />
-              </AppLayout>
+              <ProtectedRoute>
+                <AppLayout>
+                  <Medicine />
+                </AppLayout>
+              </ProtectedRoute>
             }
           />
           <Route
             path="/transactions"
             element={
-              <AppLayout>
-                <Transaction />
-              </AppLayout>
+              <ProtectedRoute>
+                <AppLayout>
+                  <Transaction />
+                </AppLayout>
+              </ProtectedRoute>
             }
           />
           <Route
             path="/reports"
             element={
-              <AppLayout>
-                <Reports />
-              </AppLayout>
+              <ProtectedRoute>
+                <AppLayout>
+                  <Reports />
+                </AppLayout>
+              </ProtectedRoute>
             }
           />
           <Route
             path="/master-data"
             element={
-              <AppLayout>
-                <MasterData />
-              </AppLayout>
+              <ProtectedRoute>
+                <AppLayout>
+                  <MasterData />
+                </AppLayout>
+              </ProtectedRoute>
             }
           />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
