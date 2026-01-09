@@ -173,6 +173,7 @@ export default function Sidebar({ currentPath = "/" }: SidebarProps) {
         <Button
           variant="ghost"
           size="sm"
+          onClick={handleLogout}
           className="w-full justify-start text-sidebar-foreground hover:bg-sidebar-accent"
         >
           <LogOut className="w-4 h-4 mr-2" />
