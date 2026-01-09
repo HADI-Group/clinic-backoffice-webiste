@@ -79,10 +79,16 @@ export default function QueueMedicalRecordForm({
   const validateNurseForm = (): boolean => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.vitalSigns?.bloodPressureSystolic && formData.vitalSigns?.bloodPressureSystolic !== 0) {
+    if (
+      !formData.vitalSigns?.bloodPressureSystolic &&
+      formData.vitalSigns?.bloodPressureSystolic !== 0
+    ) {
       newErrors.vitalSigns = "Tekanan darah sistol harus diisi";
     }
-    if (!formData.vitalSigns?.bloodPressureDiastolic && formData.vitalSigns?.bloodPressureDiastolic !== 0) {
+    if (
+      !formData.vitalSigns?.bloodPressureDiastolic &&
+      formData.vitalSigns?.bloodPressureDiastolic !== 0
+    ) {
       newErrors.vitalSigns = "Tekanan darah diastol harus diisi";
     }
     if (!formData.anamnesis?.mainComplaint) {
@@ -149,7 +155,8 @@ export default function QueueMedicalRecordForm({
   };
 
   const handleSave = () => {
-    const isValid = role === "nurse" ? validateNurseForm() : validateDoctorForm();
+    const isValid =
+      role === "nurse" ? validateNurseForm() : validateDoctorForm();
     if (!isValid) return;
 
     const savedRecord: Partial<MedicalRecord> = {
@@ -166,11 +173,13 @@ export default function QueueMedicalRecordForm({
 
   const bpStatus = interpretBloodPressure(
     formData.vitalSigns?.bloodPressureSystolic || 0,
-    formData.vitalSigns?.bloodPressureDiastolic || 0
+    formData.vitalSigns?.bloodPressureDiastolic || 0,
   );
   const pulseStatus = interpretPulse(formData.vitalSigns?.pulse || 0);
   const spO2Status = interpretSpO2(formData.vitalSigns?.spO2 || 0);
-  const tempStatus = interpretTemperature(formData.vitalSigns?.temperature || 0);
+  const tempStatus = interpretTemperature(
+    formData.vitalSigns?.temperature || 0,
+  );
 
   const isNurseForm = role === "nurse";
 
@@ -181,10 +190,13 @@ export default function QueueMedicalRecordForm({
         <div className="flex items-center justify-between p-6 border-b border-border sticky top-0 bg-white">
           <div>
             <h2 className="text-xl font-bold text-foreground">
-              {isNurseForm ? "Pemeriksaan Awal (Perawat)" : "Penyelesaian Konsultasi (Dokter)"}
+              {isNurseForm
+                ? "Pemeriksaan Awal (Perawat)"
+                : "Penyelesaian Konsultasi (Dokter)"}
             </h2>
             <p className="text-sm text-muted-foreground mt-1">
-              {queueEntry.patientName} ({queueEntry.medicalRecordNumber}) - Antrian #{queueEntry.queueNumber}
+              {queueEntry.patientName} ({queueEntry.medicalRecordNumber}) -
+              Antrian #{queueEntry.queueNumber}
             </p>
           </div>
           <button
@@ -202,7 +214,9 @@ export default function QueueMedicalRecordForm({
             <>
               {/* Vital Signs */}
               <div>
-                <h3 className="font-semibold text-foreground mb-4">Tanda Vital</h3>
+                <h3 className="font-semibold text-foreground mb-4">
+                  Tanda Vital
+                </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                   {/* Blood Pressure */}
                   <div>
@@ -219,30 +233,40 @@ export default function QueueMedicalRecordForm({
                             ...formData,
                             vitalSigns: {
                               ...formData.vitalSigns!,
-                              bloodPressureSystolic: parseFloat(e.target.value) || 0,
+                              bloodPressureSystolic:
+                                parseFloat(e.target.value) || 0,
                             },
                           })
                         }
                         className={`flex-1 px-3 py-2 border rounded-md text-foreground bg-white focus:outline-none focus:ring-2 focus:ring-primary ${
-                          errors.vitalSigns ? "border-destructive" : "border-border"
+                          errors.vitalSigns
+                            ? "border-destructive"
+                            : "border-border"
                         }`}
                       />
-                      <span className="flex items-center text-foreground">/</span>
+                      <span className="flex items-center text-foreground">
+                        /
+                      </span>
                       <input
                         type="number"
                         placeholder="Diastol"
-                        value={formData.vitalSigns?.bloodPressureDiastolic || ""}
+                        value={
+                          formData.vitalSigns?.bloodPressureDiastolic || ""
+                        }
                         onChange={(e) =>
                           setFormData({
                             ...formData,
                             vitalSigns: {
                               ...formData.vitalSigns!,
-                              bloodPressureDiastolic: parseFloat(e.target.value) || 0,
+                              bloodPressureDiastolic:
+                                parseFloat(e.target.value) || 0,
                             },
                           })
                         }
                         className={`flex-1 px-3 py-2 border rounded-md text-foreground bg-white focus:outline-none focus:ring-2 focus:ring-primary ${
-                          errors.vitalSigns ? "border-destructive" : "border-border"
+                          errors.vitalSigns
+                            ? "border-destructive"
+                            : "border-border"
                         }`}
                       />
                     </div>
@@ -309,7 +333,8 @@ export default function QueueMedicalRecordForm({
                     {formData.vitalSigns?.spO2 && (
                       <p className={`text-xs mt-1 ${spO2Status.color}`}>
                         {spO2Status.status}
-                        {spO2Status.recommendation && `: ${spO2Status.recommendation}`}
+                        {spO2Status.recommendation &&
+                          `: ${spO2Status.recommendation}`}
                       </p>
                     )}
                   </div>
@@ -337,7 +362,8 @@ export default function QueueMedicalRecordForm({
                     {formData.vitalSigns?.temperature && (
                       <p className={`text-xs mt-1 ${tempStatus.color}`}>
                         {tempStatus.status}
-                        {tempStatus.recommendation && `: ${tempStatus.recommendation}`}
+                        {tempStatus.recommendation &&
+                          `: ${tempStatus.recommendation}`}
                       </p>
                     )}
                   </div>
@@ -346,7 +372,9 @@ export default function QueueMedicalRecordForm({
 
               {/* Anamnesis */}
               <div>
-                <h3 className="font-semibold text-foreground mb-4">Anamnesis (Riwayat Kesehatan)</h3>
+                <h3 className="font-semibold text-foreground mb-4">
+                  Anamnesis (Riwayat Kesehatan)
+                </h3>
                 <div className="space-y-4">
                   <div>
                     <label className="text-sm font-medium text-foreground block mb-2">
@@ -365,13 +393,16 @@ export default function QueueMedicalRecordForm({
                       }
                       rows={3}
                       className={`w-full px-3 py-2 border rounded-md text-foreground bg-white focus:outline-none focus:ring-2 focus:ring-primary ${
-                        errors.mainComplaint ? "border-destructive" : "border-border"
+                        errors.mainComplaint
+                          ? "border-destructive"
+                          : "border-border"
                       }`}
                       placeholder="Apa keluhan pasien?"
                     />
                     {errors.mainComplaint && (
                       <p className="text-xs text-destructive mt-1 flex items-center gap-1">
-                        <AlertCircle className="w-3 h-3" /> {errors.mainComplaint}
+                        <AlertCircle className="w-3 h-3" />{" "}
+                        {errors.mainComplaint}
                       </p>
                     )}
                   </div>
@@ -429,7 +460,9 @@ export default function QueueMedicalRecordForm({
 
               {/* Physical Examination */}
               <div>
-                <h3 className="font-semibold text-foreground mb-4">Pemeriksaan Fisik</h3>
+                <h3 className="font-semibold text-foreground mb-4">
+                  Pemeriksaan Fisik
+                </h3>
                 <textarea
                   placeholder="Hasil pemeriksaan fisik (kondisi umum, pemeriksaan organ, dsb)..."
                   value={formData.physicalExamination?.examination || ""}
@@ -456,7 +489,9 @@ export default function QueueMedicalRecordForm({
 
               {/* Draft Diagnosis */}
               <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg">
-                <h3 className="font-semibold text-foreground mb-4">Diagnosis Sementara (Untuk Dokter)</h3>
+                <h3 className="font-semibold text-foreground mb-4">
+                  Diagnosis Sementara (Untuk Dokter)
+                </h3>
                 <select
                   value={formData.diagnosis || ""}
                   onChange={(e) =>
@@ -490,37 +525,54 @@ export default function QueueMedicalRecordForm({
             <>
               {/* Display Vital Signs & Anamnesis Summary */}
               <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                <h3 className="font-semibold text-foreground mb-3">Ringkasan Data Perawat</h3>
+                <h3 className="font-semibold text-foreground mb-3">
+                  Ringkasan Data Perawat
+                </h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm mb-4">
                   <div>
-                    <p className="text-xs text-muted-foreground">Tekanan Darah</p>
+                    <p className="text-xs text-muted-foreground">
+                      Tekanan Darah
+                    </p>
                     <p className="font-medium text-foreground">
-                      {formData.vitalSigns?.bloodPressureSystolic}/{formData.vitalSigns?.bloodPressureDiastolic} mmHg
+                      {formData.vitalSigns?.bloodPressureSystolic}/
+                      {formData.vitalSigns?.bloodPressureDiastolic} mmHg
                     </p>
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground">Nadi</p>
-                    <p className="font-medium text-foreground">{formData.vitalSigns?.pulse} bpm</p>
+                    <p className="font-medium text-foreground">
+                      {formData.vitalSigns?.pulse} bpm
+                    </p>
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground">SpO2</p>
-                    <p className="font-medium text-foreground">{formData.vitalSigns?.spO2}%</p>
+                    <p className="font-medium text-foreground">
+                      {formData.vitalSigns?.spO2}%
+                    </p>
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground">Suhu</p>
-                    <p className="font-medium text-foreground">{formData.vitalSigns?.temperature}°C</p>
+                    <p className="font-medium text-foreground">
+                      {formData.vitalSigns?.temperature}°C
+                    </p>
                   </div>
                 </div>
 
                 <div>
-                  <p className="text-xs text-muted-foreground mb-1">Keluhan Utama</p>
-                  <p className="text-sm text-foreground">{formData.anamnesis?.mainComplaint || "-"}</p>
+                  <p className="text-xs text-muted-foreground mb-1">
+                    Keluhan Utama
+                  </p>
+                  <p className="text-sm text-foreground">
+                    {formData.anamnesis?.mainComplaint || "-"}
+                  </p>
                 </div>
               </div>
 
               {/* Diagnosis */}
               <div>
-                <h3 className="font-semibold text-foreground mb-4">Diagnosis Akhir *</h3>
+                <h3 className="font-semibold text-foreground mb-4">
+                  Diagnosis Akhir *
+                </h3>
                 <select
                   value={formData.diagnosis || ""}
                   onChange={(e) =>
@@ -556,7 +608,9 @@ export default function QueueMedicalRecordForm({
 
               {/* Therapies */}
               <div>
-                <h3 className="font-semibold text-foreground mb-4">Terapi/Obat yang Diberikan *</h3>
+                <h3 className="font-semibold text-foreground mb-4">
+                  Terapi/Obat yang Diberikan *
+                </h3>
                 {therapies.length > 0 && (
                   <div className="space-y-2 mb-4">
                     {therapies.map((therapy, idx) => (
@@ -569,7 +623,8 @@ export default function QueueMedicalRecordForm({
                             {therapy.medicineName}
                           </p>
                           <p className="text-xs text-muted-foreground">
-                            {therapy.dosage} - {therapy.frequency} - {therapy.duration}
+                            {therapy.dosage} - {therapy.frequency} -{" "}
+                            {therapy.duration}
                           </p>
                           {therapy.notes && (
                             <p className="text-xs text-muted-foreground italic">
@@ -599,7 +654,10 @@ export default function QueueMedicalRecordForm({
                     placeholder="Nama obat"
                     value={newTherapy.medicineName || ""}
                     onChange={(e) =>
-                      setNewTherapy({ ...newTherapy, medicineName: e.target.value })
+                      setNewTherapy({
+                        ...newTherapy,
+                        medicineName: e.target.value,
+                      })
                     }
                     className="w-full px-3 py-2 border border-border rounded-md text-foreground bg-white focus:outline-none focus:ring-2 focus:ring-primary"
                   />
@@ -618,7 +676,10 @@ export default function QueueMedicalRecordForm({
                       placeholder="Frekuensi (e.g., 3x sehari)"
                       value={newTherapy.frequency || ""}
                       onChange={(e) =>
-                        setNewTherapy({ ...newTherapy, frequency: e.target.value })
+                        setNewTherapy({
+                          ...newTherapy,
+                          frequency: e.target.value,
+                        })
                       }
                       className="px-3 py-2 border border-border rounded-md text-foreground bg-white focus:outline-none focus:ring-2 focus:ring-primary"
                     />
@@ -627,7 +688,10 @@ export default function QueueMedicalRecordForm({
                       placeholder="Durasi (e.g., 7 hari)"
                       value={newTherapy.duration || ""}
                       onChange={(e) =>
-                        setNewTherapy({ ...newTherapy, duration: e.target.value })
+                        setNewTherapy({
+                          ...newTherapy,
+                          duration: e.target.value,
+                        })
                       }
                       className="px-3 py-2 border border-border rounded-md text-foreground bg-white focus:outline-none focus:ring-2 focus:ring-primary"
                     />
@@ -705,7 +769,10 @@ export default function QueueMedicalRecordForm({
                     placeholder="Deskripsi tindakan (opsional)"
                     value={newAction.description || ""}
                     onChange={(e) =>
-                      setNewAction({ ...newAction, description: e.target.value })
+                      setNewAction({
+                        ...newAction,
+                        description: e.target.value,
+                      })
                     }
                     rows={2}
                     className="w-full px-3 py-2 border border-border rounded-md text-foreground bg-white focus:outline-none focus:ring-2 focus:ring-primary"

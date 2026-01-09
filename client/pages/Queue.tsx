@@ -1,7 +1,20 @@
 import { useState, useMemo } from "react";
-import { Clock, CheckCircle2, AlertCircle, Plus, RefreshCw, Edit2 } from "lucide-react";
+import {
+  Clock,
+  CheckCircle2,
+  AlertCircle,
+  Plus,
+  RefreshCw,
+  Edit2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { mockQueueEntries, getQueueStats, updateQueueEntryStatus, addQueueEntry, getNextQueueNumber } from "@/data/mockQueue";
+import {
+  mockQueueEntries,
+  getQueueStats,
+  updateQueueEntryStatus,
+  addQueueEntry,
+  getNextQueueNumber,
+} from "@/data/mockQueue";
 import { mockPatients } from "@/data/mockPatients";
 import { mockMedicalRecords } from "@/data/mockMedicalRecords";
 import { QueueEntry } from "@/types/queue";
@@ -14,13 +27,20 @@ export default function Queue() {
   const [medicalRecords, setMedicalRecords] = useState(mockMedicalRecords);
   const [isAddingQueue, setIsAddingQueue] = useState(false);
   const [selectedPatientId, setSelectedPatientId] = useState("");
-  const [queueType, setQueueType] = useState<"registration" | "checkup" | "followup">("registration");
-  const [priority, setPriority] = useState<"normal" | "urgent" | "vip">("normal");
+  const [queueType, setQueueType] = useState<
+    "registration" | "checkup" | "followup"
+  >("registration");
+  const [priority, setPriority] = useState<"normal" | "urgent" | "vip">(
+    "normal",
+  );
 
   // Medical record form state
   const [showMedicalRecordForm, setShowMedicalRecordForm] = useState(false);
-  const [selectedQueueEntry, setSelectedQueueEntry] = useState<QueueEntry | null>(null);
-  const [currentMedicalRecord, setCurrentMedicalRecord] = useState<MedicalRecord | undefined>();
+  const [selectedQueueEntry, setSelectedQueueEntry] =
+    useState<QueueEntry | null>(null);
+  const [currentMedicalRecord, setCurrentMedicalRecord] = useState<
+    MedicalRecord | undefined
+  >();
   const [formRole, setFormRole] = useState<"nurse" | "doctor">("nurse");
 
   const stats = useMemo(() => getQueueStats(), [queueEntries]);
@@ -60,11 +80,16 @@ export default function Queue() {
     setPriority("normal");
   };
 
-  const handleOpenMedicalRecord = (queueEntry: QueueEntry, role: "nurse" | "doctor") => {
+  const handleOpenMedicalRecord = (
+    queueEntry: QueueEntry,
+    role: "nurse" | "doctor",
+  ) => {
     // Check if medical record already exists for this queue entry
     let medRecord = undefined;
     if (queueEntry.medicalRecordId) {
-      medRecord = medicalRecords.find((mr) => mr.id === queueEntry.medicalRecordId);
+      medRecord = medicalRecords.find(
+        (mr) => mr.id === queueEntry.medicalRecordId,
+      );
     }
 
     setSelectedQueueEntry(queueEntry);
@@ -76,7 +101,9 @@ export default function Queue() {
   const handleSaveMedicalRecord = (recordData: Partial<MedicalRecord>) => {
     if (!selectedQueueEntry) return;
 
-    const patient = mockPatients.find((p) => p.id === selectedQueueEntry.patientId);
+    const patient = mockPatients.find(
+      (p) => p.id === selectedQueueEntry.patientId,
+    );
     if (!patient) return;
 
     let savedRecord: MedicalRecord;
@@ -90,7 +117,9 @@ export default function Queue() {
         updatedBy: formRole === "nurse" ? "Perawat" : "Dokter",
       };
       setMedicalRecords(
-        medicalRecords.map((mr) => (mr.id === savedRecord.id ? savedRecord : mr))
+        medicalRecords.map((mr) =>
+          mr.id === savedRecord.id ? savedRecord : mr,
+        ),
       );
     } else {
       // Create new record
@@ -114,7 +143,9 @@ export default function Queue() {
     };
 
     setQueueEntries(
-      queueEntries.map((q) => (q.id === selectedQueueEntry.id ? updatedQueueEntry : q))
+      queueEntries.map((q) =>
+        q.id === selectedQueueEntry.id ? updatedQueueEntry : q,
+      ),
     );
 
     setShowMedicalRecordForm(false);
@@ -125,9 +156,7 @@ export default function Queue() {
   const handleStatusChange = (id: string, newStatus: QueueEntry["status"]) => {
     updateQueueEntryStatus(id, newStatus);
     setQueueEntries(
-      queueEntries.map((q) =>
-        q.id === id ? { ...q, status: newStatus } : q
-      )
+      queueEntries.map((q) => (q.id === id ? { ...q, status: newStatus } : q)),
     );
   };
 
@@ -136,9 +165,12 @@ export default function Queue() {
       {/* Header */}
       <div className="border-b border-border bg-white px-8 py-6">
         <div className="mb-6">
-          <h1 className="text-3xl font-bold text-foreground">Antrian & Pendaftaran</h1>
+          <h1 className="text-3xl font-bold text-foreground">
+            Antrian & Pendaftaran
+          </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Kelola antrian pasien, pemeriksaan awal, dan konsultasi dokter terintegrasi dengan rekam medis
+            Kelola antrian pasien, pemeriksaan awal, dan konsultasi dokter
+            terintegrasi dengan rekam medis
           </p>
         </div>
 
@@ -150,19 +182,29 @@ export default function Queue() {
           </div>
           <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
             <p className="text-sm text-yellow-600 font-medium">Menunggu</p>
-            <p className="text-3xl font-bold text-yellow-900">{stats.waiting}</p>
+            <p className="text-3xl font-bold text-yellow-900">
+              {stats.waiting}
+            </p>
           </div>
           <div className="bg-orange-50 p-4 rounded-lg border border-orange-200">
-            <p className="text-sm text-orange-600 font-medium">Sedang Dilayani</p>
-            <p className="text-3xl font-bold text-orange-900">{stats.inProgress}</p>
+            <p className="text-sm text-orange-600 font-medium">
+              Sedang Dilayani
+            </p>
+            <p className="text-3xl font-bold text-orange-900">
+              {stats.inProgress}
+            </p>
           </div>
           <div className="bg-green-50 p-4 rounded-lg border border-green-200">
             <p className="text-sm text-green-600 font-medium">Selesai</p>
             <p className="text-3xl font-bold text-green-900">{stats.done}</p>
           </div>
           <div className="bg-gray-100 p-4 rounded-lg border border-gray-300">
-            <p className="text-sm text-gray-600 font-medium">Rata-rata Tunggu</p>
-            <p className="text-3xl font-bold text-gray-900">{stats.averageWaitTime} min</p>
+            <p className="text-sm text-gray-600 font-medium">
+              Rata-rata Tunggu
+            </p>
+            <p className="text-3xl font-bold text-gray-900">
+              {stats.averageWaitTime} min
+            </p>
           </div>
         </div>
       </div>
@@ -271,7 +313,10 @@ export default function Queue() {
                   </p>
                 ) : (
                   queuesByStatus.waiting.map((q) => (
-                    <div key={q.id} className="bg-yellow-50 border border-yellow-200 p-3 rounded-lg">
+                    <div
+                      key={q.id}
+                      className="bg-yellow-50 border border-yellow-200 p-3 rounded-lg"
+                    >
                       <div className="flex items-start justify-between mb-2">
                         <div>
                           <p className="text-2xl font-bold text-yellow-900">
@@ -284,18 +329,28 @@ export default function Queue() {
                             {q.medicalRecordNumber}
                           </p>
                         </div>
-                        <span className={`text-xs px-2 py-1 rounded font-medium ${
-                          q.priority === "urgent"
-                            ? "bg-red-100 text-red-800"
+                        <span
+                          className={`text-xs px-2 py-1 rounded font-medium ${
+                            q.priority === "urgent"
+                              ? "bg-red-100 text-red-800"
+                              : q.priority === "vip"
+                                ? "bg-blue-100 text-blue-800"
+                                : "bg-gray-100 text-gray-800"
+                          }`}
+                        >
+                          {q.priority === "urgent"
+                            ? "🔴 Urgent"
                             : q.priority === "vip"
-                              ? "bg-blue-100 text-blue-800"
-                              : "bg-gray-100 text-gray-800"
-                        }`}>
-                          {q.priority === "urgent" ? "🔴 Urgent" : q.priority === "vip" ? "⭐ VIP" : "Normal"}
+                              ? "⭐ VIP"
+                              : "Normal"}
                         </span>
                       </div>
                       <p className="text-xs text-muted-foreground mb-3">
-                        {q.queueType === "registration" ? "Pendaftaran" : q.queueType === "checkup" ? "Pemeriksaan" : "Follow-up"}
+                        {q.queueType === "registration"
+                          ? "Pendaftaran"
+                          : q.queueType === "checkup"
+                            ? "Pemeriksaan"
+                            : "Follow-up"}
                       </p>
                       <div className="space-y-2">
                         <Button
@@ -309,7 +364,9 @@ export default function Queue() {
                         </Button>
                         <Button
                           size="sm"
-                          onClick={() => handleStatusChange(q.id, "in_progress")}
+                          onClick={() =>
+                            handleStatusChange(q.id, "in_progress")
+                          }
                           className="w-full text-xs bg-primary text-primary-foreground hover:bg-primary/90"
                         >
                           Mulai Konsultasi
@@ -336,7 +393,10 @@ export default function Queue() {
                   </p>
                 ) : (
                   queuesByStatus.inProgress.map((q) => (
-                    <div key={q.id} className="bg-orange-50 border border-orange-200 p-3 rounded-lg">
+                    <div
+                      key={q.id}
+                      className="bg-orange-50 border border-orange-200 p-3 rounded-lg"
+                    >
                       <div className="flex items-start justify-between mb-2">
                         <div>
                           <p className="text-2xl font-bold text-orange-900">
@@ -349,18 +409,27 @@ export default function Queue() {
                             {q.medicalRecordNumber}
                           </p>
                         </div>
-                        <span className={`text-xs px-2 py-1 rounded font-medium ${
-                          q.priority === "urgent"
-                            ? "bg-red-100 text-red-800"
+                        <span
+                          className={`text-xs px-2 py-1 rounded font-medium ${
+                            q.priority === "urgent"
+                              ? "bg-red-100 text-red-800"
+                              : q.priority === "vip"
+                                ? "bg-blue-100 text-blue-800"
+                                : "bg-gray-100 text-gray-800"
+                          }`}
+                        >
+                          {q.priority === "urgent"
+                            ? "🔴 Urgent"
                             : q.priority === "vip"
-                              ? "bg-blue-100 text-blue-800"
-                              : "bg-gray-100 text-gray-800"
-                        }`}>
-                          {q.priority === "urgent" ? "🔴 Urgent" : q.priority === "vip" ? "⭐ VIP" : "Normal"}
+                              ? "⭐ VIP"
+                              : "Normal"}
                         </span>
                       </div>
                       <p className="text-xs text-muted-foreground mb-3">
-                        Dimulai: {q.startTime ? new Date(q.startTime).toLocaleTimeString("id-ID") : "-"}
+                        Dimulai:{" "}
+                        {q.startTime
+                          ? new Date(q.startTime).toLocaleTimeString("id-ID")
+                          : "-"}
                       </p>
                       <div className="space-y-2">
                         <Button
@@ -402,7 +471,10 @@ export default function Queue() {
                   </p>
                 ) : (
                   queuesByStatus.done.map((q) => (
-                    <div key={q.id} className="bg-green-50 border border-green-200 p-3 rounded-lg">
+                    <div
+                      key={q.id}
+                      className="bg-green-50 border border-green-200 p-3 rounded-lg"
+                    >
                       <div className="flex items-start justify-between mb-2">
                         <div>
                           <p className="text-2xl font-bold text-green-900">
@@ -417,7 +489,10 @@ export default function Queue() {
                         </div>
                       </div>
                       <p className="text-xs text-muted-foreground">
-                        Selesai: {q.endTime ? new Date(q.endTime).toLocaleTimeString("id-ID") : "-"}
+                        Selesai:{" "}
+                        {q.endTime
+                          ? new Date(q.endTime).toLocaleTimeString("id-ID")
+                          : "-"}
                       </p>
                       {q.medicalRecordId && (
                         <Button

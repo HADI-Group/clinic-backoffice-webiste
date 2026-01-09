@@ -7,7 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 export default function Login() {
   const navigate = useNavigate();
   const { toast } = useToast();
-  
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -118,7 +118,10 @@ export default function Login() {
           </div>
 
           {/* Form */}
-          <form onSubmit={handleLogin} className="px-6 py-8 sm:px-8 sm:py-10 space-y-6">
+          <form
+            onSubmit={handleLogin}
+            className="px-6 py-8 sm:px-8 sm:py-10 space-y-6"
+          >
             {/* Email Field */}
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">
@@ -233,7 +236,8 @@ export default function Login() {
             </p>
             <div className="space-y-2 text-xs text-muted-foreground bg-blue-50 rounded-lg p-3 border border-blue-100">
               <div>
-                <span className="font-semibold">Email:</span> demo@medicare.local
+                <span className="font-semibold">Email:</span>{" "}
+                demo@medicare.local
               </div>
               <div>
                 <span className="font-semibold">Password:</span> demo123
