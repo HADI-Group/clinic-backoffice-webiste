@@ -16,6 +16,7 @@ export interface QueueEntry {
   notes?: string;
   priority: "normal" | "urgent" | "vip";
   createdAt: string;
+  medicalRecordId?: string; // Link to medical record created during this queue entry
 }
 
 export interface QueueStats {
