@@ -60,19 +60,9 @@ const mainMenuItems = [
 
 const masterDataItems = [
   {
-    label: "Data Dokter",
-    icon: UserCheck,
-    path: "/master-data/doctors",
-  },
-  {
-    label: "Diagnosis",
-    icon: Stethoscope,
-    path: "/master-data/diagnosis",
-  },
-  {
-    label: "Pengaturan",
+    label: "Master Data",
     icon: Settings,
-    path: "/master-data/settings",
+    path: "/master-data",
   },
 ];
 
