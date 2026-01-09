@@ -14,6 +14,7 @@ export const mockQueueEntries: QueueEntry[] = [
     doctorId: "doc-1",
     priority: "normal",
     createdAt: "2026-01-15T08:00:00",
+    medicalRecordId: "mr-1",
   },
   {
     id: "q-2",
