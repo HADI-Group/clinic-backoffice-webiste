@@ -1,17 +1,27 @@
 import { useState, useMemo } from "react";
-import { Clock, CheckCircle2, AlertCircle, Plus, RefreshCw } from "lucide-react";
+import { Clock, CheckCircle2, AlertCircle, Plus, RefreshCw, Edit2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { mockQueueEntries, getQueueStats, updateQueueEntryStatus, addQueueEntry, getNextQueueNumber } from "@/data/mockQueue";
 import { mockPatients } from "@/data/mockPatients";
+import { mockMedicalRecords } from "@/data/mockMedicalRecords";
 import { QueueEntry } from "@/types/queue";
+import { MedicalRecord } from "@/types/medicalRecord";
 import { formatDateID } from "@/utils/patient";
+import QueueMedicalRecordForm from "@/components/QueueMedicalRecordForm";
 
 export default function Queue() {
   const [queueEntries, setQueueEntries] = useState(mockQueueEntries);
+  const [medicalRecords, setMedicalRecords] = useState(mockMedicalRecords);
   const [isAddingQueue, setIsAddingQueue] = useState(false);
   const [selectedPatientId, setSelectedPatientId] = useState("");
   const [queueType, setQueueType] = useState<"registration" | "checkup" | "followup">("registration");
   const [priority, setPriority] = useState<"normal" | "urgent" | "vip">("normal");
+
+  // Medical record form state
+  const [showMedicalRecordForm, setShowMedicalRecordForm] = useState(false);
+  const [selectedQueueEntry, setSelectedQueueEntry] = useState<QueueEntry | null>(null);
+  const [currentMedicalRecord, setCurrentMedicalRecord] = useState<MedicalRecord | undefined>();
+  const [formRole, setFormRole] = useState<"nurse" | "doctor">("nurse");
 
   const stats = useMemo(() => getQueueStats(), [queueEntries]);
 
@@ -50,6 +60,68 @@ export default function Queue() {
     setPriority("normal");
   };
 
+  const handleOpenMedicalRecord = (queueEntry: QueueEntry, role: "nurse" | "doctor") => {
+    // Check if medical record already exists for this queue entry
+    let medRecord = undefined;
+    if (queueEntry.medicalRecordId) {
+      medRecord = medicalRecords.find((mr) => mr.id === queueEntry.medicalRecordId);
+    }
+
+    setSelectedQueueEntry(queueEntry);
+    setCurrentMedicalRecord(medRecord);
+    setFormRole(role);
+    setShowMedicalRecordForm(true);
+  };
+
+  const handleSaveMedicalRecord = (recordData: Partial<MedicalRecord>) => {
+    if (!selectedQueueEntry) return;
+
+    const patient = mockPatients.find((p) => p.id === selectedQueueEntry.patientId);
+    if (!patient) return;
+
+    let savedRecord: MedicalRecord;
+
+    if (currentMedicalRecord) {
+      // Update existing record
+      savedRecord = {
+        ...currentMedicalRecord,
+        ...recordData,
+        updatedAt: new Date().toISOString(),
+        updatedBy: formRole === "nurse" ? "Perawat" : "Dokter",
+      };
+      setMedicalRecords(
+        medicalRecords.map((mr) => (mr.id === savedRecord.id ? savedRecord : mr))
+      );
+    } else {
+      // Create new record
+      savedRecord = {
+        id: `mr-${Date.now()}`,
+        patientId: selectedQueueEntry.patientId,
+        medicalRecordNumber: selectedQueueEntry.medicalRecordNumber,
+        consultationDate: new Date().toISOString().split("T")[0],
+        ...recordData,
+        createdAt: new Date().toISOString(),
+        createdBy: formRole === "nurse" ? "Perawat" : "Dokter",
+        status: formRole === "nurse" ? "draft" : "completed",
+      } as MedicalRecord;
+      setMedicalRecords([...medicalRecords, savedRecord]);
+    }
+
+    // Link medical record to queue entry
+    const updatedQueueEntry = {
+      ...selectedQueueEntry,
+      medicalRecordId: savedRecord.id,
+    };
+
+    setQueueEntries(
+      queueEntries.map((q) => (q.id === selectedQueueEntry.id ? updatedQueueEntry : q))
+    );
+
+    setShowMedicalRecordForm(false);
+    setSelectedQueueEntry(null);
+    setCurrentMedicalRecord(undefined);
+  };
+
   const handleStatusChange = (id: string, newStatus: QueueEntry["status"]) => {
     updateQueueEntryStatus(id, newStatus);
     setQueueEntries(
@@ -66,7 +138,7 @@ export default function Queue() {
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-foreground">Antrian & Pendaftaran</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Kelola antrian pasien dan status konsultasi
+            Kelola antrian pasien, pemeriksaan awal, dan konsultasi dokter terintegrasi dengan rekam medis
           </p>
         </div>
 
@@ -225,14 +297,24 @@ export default function Queue() {
                       <p className="text-xs text-muted-foreground mb-3">
                         {q.queueType === "registration" ? "Pendaftaran" : q.queueType === "checkup" ? "Pemeriksaan" : "Follow-up"}
                       </p>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleStatusChange(q.id, "in_progress")}
-                        className="w-full text-xs"
-                      >
-                        Mulai Layani
-                      </Button>
+                      <div className="space-y-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleOpenMedicalRecord(q, "nurse")}
+                          className="w-full text-xs"
+                        >
+                          <Edit2 className="w-3 h-3 mr-1" />
+                          Pemeriksaan Awal
+                        </Button>
+                        <Button
+                          size="sm"
+                          onClick={() => handleStatusChange(q.id, "in_progress")}
+                          className="w-full text-xs bg-primary text-primary-foreground hover:bg-primary/90"
+                        >
+                          Mulai Konsultasi
+                        </Button>
+                      </div>
                     </div>
                   ))
                 )}
@@ -280,14 +362,25 @@ export default function Queue() {
                       <p className="text-xs text-muted-foreground mb-3">
                         Dimulai: {q.startTime ? new Date(q.startTime).toLocaleTimeString("id-ID") : "-"}
                       </p>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleStatusChange(q.id, "done")}
-                        className="w-full text-xs"
-                      >
-                        Selesaikan
-                      </Button>
+                      <div className="space-y-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleOpenMedicalRecord(q, "doctor")}
+                          className="w-full text-xs"
+                        >
+                          <Edit2 className="w-3 h-3 mr-1" />
+                          Selesaikan Konsultasi
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleStatusChange(q.id, "done")}
+                          className="w-full text-xs"
+                        >
+                          Tandai Selesai
+                        </Button>
+                      </div>
                     </div>
                   ))
                 )}
@@ -326,6 +419,17 @@ export default function Queue() {
                       <p className="text-xs text-muted-foreground">
                         Selesai: {q.endTime ? new Date(q.endTime).toLocaleTimeString("id-ID") : "-"}
                       </p>
+                      {q.medicalRecordId && (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleOpenMedicalRecord(q, "doctor")}
+                          className="w-full text-xs mt-2"
+                        >
+                          <Edit2 className="w-3 h-3 mr-1" />
+                          Lihat Rekam Medis
+                        </Button>
+                      )}
                     </div>
                   ))
                 )}
@@ -336,6 +440,22 @@ export default function Queue() {
 
         <div className="h-8" />
       </div>
+
+      {/* Medical Record Form Modal */}
+      {selectedQueueEntry && (
+        <QueueMedicalRecordForm
+          queueEntry={selectedQueueEntry}
+          medicalRecord={currentMedicalRecord}
+          onSave={handleSaveMedicalRecord}
+          onCancel={() => {
+            setShowMedicalRecordForm(false);
+            setSelectedQueueEntry(null);
+            setCurrentMedicalRecord(undefined);
+          }}
+          isOpen={showMedicalRecordForm}
+          role={formRole}
+        />
+      )}
     </div>
   );
 }
