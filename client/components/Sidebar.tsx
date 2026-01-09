@@ -67,7 +67,14 @@ const masterDataItems = [
 ];
 
 export default function Sidebar({ currentPath = "/" }: SidebarProps) {
+  const navigate = useNavigate();
   const isActive = (path: string) => currentPath === path;
+
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("userEmail");
+    navigate("/login", { replace: true });
+  };
 
   return (
     <div className="w-64 bg-sidebar border-r border-sidebar-border h-screen flex flex-col">
