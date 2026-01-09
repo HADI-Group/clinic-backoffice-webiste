@@ -17,7 +17,6 @@ import Transaction from "./pages/Transaction";
 import Reports from "./pages/Reports";
 import MasterData from "./pages/MasterData";
 import AppLayout from "./components/AppLayout";
-import PagePlaceholder from "./components/PagePlaceholder";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
