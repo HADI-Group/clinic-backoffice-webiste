@@ -103,35 +103,10 @@ const App = () => (
             }
           />
           <Route
-            path="/master-data/doctors"
+            path="/master-data"
             element={
               <AppLayout>
-                <PagePlaceholder
-                  title="Data Dokter"
-                  description="Kelola data dokter dan spesialisasi."
-                />
-              </AppLayout>
-            }
-          />
-          <Route
-            path="/master-data/diagnosis"
-            element={
-              <AppLayout>
-                <PagePlaceholder
-                  title="Diagnosis"
-                  description="Kelola daftar diagnosis medis."
-                />
-              </AppLayout>
-            }
-          />
-          <Route
-            path="/master-data/settings"
-            element={
-              <AppLayout>
-                <PagePlaceholder
-                  title="Pengaturan"
-                  description="Kelola pengaturan sistem klinik."
-                />
+                <MasterData />
               </AppLayout>
             }
           />
