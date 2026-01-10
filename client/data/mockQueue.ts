@@ -14,6 +14,7 @@ export const mockQueueEntries: QueueEntry[] = [
     doctorId: "doc-1",
     priority: "normal",
     createdAt: "2026-01-15T08:00:00",
+    medicalRecordId: "mr-1",
   },
   {
     id: "q-2",
@@ -83,10 +84,7 @@ export function getQueueStats(): QueueStats {
 }
 
 export function getNextQueueNumber(): number {
-  const max = Math.max(
-    ...mockQueueEntries.map((q) => q.queueNumber),
-    0
-  );
+  const max = Math.max(...mockQueueEntries.map((q) => q.queueNumber), 0);
   return max + 1;
 }
 
@@ -96,7 +94,7 @@ export function addQueueEntry(entry: QueueEntry): void {
 
 export function updateQueueEntryStatus(
   id: string,
-  status: QueueEntry["status"]
+  status: QueueEntry["status"],
 ): void {
   const entry = mockQueueEntries.find((q) => q.id === id);
   if (entry) {

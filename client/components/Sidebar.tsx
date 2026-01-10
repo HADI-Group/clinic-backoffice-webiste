@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   Users,
@@ -60,24 +60,21 @@ const mainMenuItems = [
 
 const masterDataItems = [
   {
-    label: "Data Dokter",
-    icon: UserCheck,
-    path: "/master-data/doctors",
-  },
-  {
-    label: "Diagnosis",
-    icon: Stethoscope,
-    path: "/master-data/diagnosis",
-  },
-  {
-    label: "Pengaturan",
+    label: "Master Data",
     icon: Settings,
-    path: "/master-data/settings",
+    path: "/master-data",
   },
 ];
 
 export default function Sidebar({ currentPath = "/" }: SidebarProps) {
+  const navigate = useNavigate();
   const isActive = (path: string) => currentPath === path;
+
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("userEmail");
+    navigate("/login", { replace: true });
+  };
 
   return (
     <div className="w-64 bg-sidebar border-r border-sidebar-border h-screen flex flex-col">
@@ -176,6 +173,7 @@ export default function Sidebar({ currentPath = "/" }: SidebarProps) {
         <Button
           variant="ghost"
           size="sm"
+          onClick={handleLogout}
           className="w-full justify-start text-sidebar-foreground hover:bg-sidebar-accent"
         >
           <LogOut className="w-4 h-4 mr-2" />
