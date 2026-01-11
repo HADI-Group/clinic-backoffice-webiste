@@ -1,16 +1,13 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Heart, AlertCircle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
+import { useBackOfficeLogin } from "@/hooks/use-backoffice-login";
 
 export default function Login() {
-  const navigate = useNavigate();
-  const { toast } = useToast();
+  const { login, demoLogin, isLoading } = useBackOfficeLogin();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const validateForm = (): boolean => {
@@ -32,84 +29,29 @@ export default function Login() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!validateForm()) return;
-
-    setIsLoading(true);
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 800));
-
-      // Mock login validation - accept any valid email/password combination
-      // In production, this would call a real API endpoint
-      if (email && password) {
-        toast({
-          title: "Berhasil masuk",
-          description: `Selamat datang, ${email}!`,
-        });
-
-        // Store a mock auth token (in production, use secure methods)
-        localStorage.setItem("authToken", "mock-token-" + Date.now());
-        localStorage.setItem("userEmail", email);
-
-        navigate("/dashboard");
-      }
-    } catch (error) {
-      toast({
-        title: "Kesalahan Login",
-        description: "Terjadi kesalahan saat login. Silakan coba lagi.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleDemoLogin = async () => {
-    setIsLoading(true);
-    try {
-      // Demo login with preset credentials
-      await new Promise((resolve) => setTimeout(resolve, 800));
-
-      toast({
-        title: "Demo Mode",
-        description: "Masuk dengan akun demo...",
-      });
-
-      localStorage.setItem("authToken", "demo-token-" + Date.now());
-      localStorage.setItem("userEmail", "demo@medicare.local");
-
-      navigate("/dashboard");
-    } catch (error) {
-      toast({
-        title: "Kesalahan",
-        description: "Gagal masuk ke mode demo.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    login(email, password);
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       {/* Background Decoration */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-indigo-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+      <div className="absolute top-0 right-0 w-96 h-96 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob" />
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-indigo-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000" />
 
       {/* Login Container */}
       <div className="relative z-10 w-full max-w-md">
         <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
           {/* Header */}
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-8 sm:px-8 sm:py-10">
+          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-8">
             <div className="flex items-center justify-center mb-4">
-              <div className="bg-white rounded-lg p-3 flex items-center justify-center">
+              <div className="bg-white rounded-lg p-3">
                 <Heart className="w-8 h-8 text-blue-600 fill-current" />
               </div>
             </div>
-            <h1 className="text-3xl sm:text-4xl font-bold text-white text-center">
+            <h1 className="text-3xl font-bold text-white text-center">
               MediCare
             </h1>
             <p className="text-blue-100 text-center mt-2 text-sm">
@@ -119,13 +61,13 @@ export default function Login() {
 
           {/* Form */}
           <form
-            onSubmit={handleLogin}
-            className="px-6 py-8 sm:px-8 sm:py-10 space-y-6"
+            onSubmit={handleSubmit}
+            className="px-6 py-8 space-y-6"
           >
-            {/* Email Field */}
+            {/* Email */}
             <div>
-              <label className="block text-sm font-medium text-foreground mb-2">
-                Email atau Username
+              <label className="block text-sm font-medium mb-2">
+                Email
               </label>
               <input
                 type="email"
@@ -136,11 +78,10 @@ export default function Login() {
                     setErrors({ ...errors, email: "" });
                   }
                 }}
-                placeholder="nama@medicare.local"
-                className={`w-full px-4 py-2.5 border rounded-lg text-foreground bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all ${
+                disabled={isLoading}
+                className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 ${
                   errors.email ? "border-destructive" : "border-border"
                 }`}
-                disabled={isLoading}
               />
               {errors.email && (
                 <div className="flex items-center gap-2 mt-2 text-sm text-destructive">
@@ -150,9 +91,9 @@ export default function Login() {
               )}
             </div>
 
-            {/* Password Field */}
+            {/* Password */}
             <div>
-              <label className="block text-sm font-medium text-foreground mb-2">
+              <label className="block text-sm font-medium mb-2">
                 Password
               </label>
               <input
@@ -164,11 +105,12 @@ export default function Login() {
                     setErrors({ ...errors, password: "" });
                   }
                 }}
-                placeholder="Masukkan password Anda"
-                className={`w-full px-4 py-2.5 border rounded-lg text-foreground bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all ${
-                  errors.password ? "border-destructive" : "border-border"
-                }`}
                 disabled={isLoading}
+                className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 ${
+                  errors.password
+                    ? "border-destructive"
+                    : "border-border"
+                }`}
               />
               {errors.password && (
                 <div className="flex items-center gap-2 mt-2 text-sm text-destructive">
@@ -178,27 +120,11 @@ export default function Login() {
               )}
             </div>
 
-            {/* Remember Me */}
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                id="remember"
-                className="w-4 h-4 rounded border-border cursor-pointer"
-                disabled={isLoading}
-              />
-              <label
-                htmlFor="remember"
-                className="ml-2 text-sm text-muted-foreground cursor-pointer"
-              >
-                Ingat saya
-              </label>
-            </div>
-
             {/* Login Button */}
             <Button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold py-2.5 rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all flex items-center justify-center gap-2 disabled:opacity-75 disabled:cursor-not-allowed"
+              className="w-full flex items-center justify-center gap-2"
             >
               {isLoading ? (
                 <>
@@ -210,70 +136,38 @@ export default function Login() {
               )}
             </Button>
 
-            {/* Demo Button */}
+            {/* Demo Login */}
             <Button
               type="button"
-              onClick={handleDemoLogin}
-              disabled={isLoading}
               variant="outline"
-              className="w-full py-2.5 text-foreground border-border hover:bg-gray-50 transition-all"
+              disabled={isLoading}
+              onClick={demoLogin}
+              className="w-full"
             >
-              {isLoading ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                  Memproses...
-                </>
-              ) : (
-                "Coba Mode Demo"
-              )}
+              Coba Mode Demo
             </Button>
           </form>
 
           {/* Footer */}
-          <div className="px-6 py-6 sm:px-8 sm:py-8 bg-gray-50 border-t border-border text-center">
-            <p className="text-xs sm:text-sm text-muted-foreground mb-3">
-              Akun Demo untuk Keperluan Testing
+          <div className="px-6 py-6 bg-gray-50 border-t text-center">
+            <p className="text-xs text-muted-foreground mb-3">
+              Akun Demo
             </p>
-            <div className="space-y-2 text-xs text-muted-foreground bg-blue-50 rounded-lg p-3 border border-blue-100">
+            <div className="text-xs bg-blue-50 rounded-lg p-3 border">
               <div>
-                <span className="font-semibold">Email:</span>{" "}
-                demo@medicare.local
+                <b>Email:</b> demo@medicare.local
               </div>
               <div>
-                <span className="font-semibold">Password:</span> demo123
+                <b>Password:</b> demo123
               </div>
             </div>
           </div>
         </div>
 
-        {/* Footer Info */}
-        <div className="text-center mt-6 text-sm text-gray-600">
-          <p>© 2026 MediCare. Hak Cipta Terjaga.</p>
-          <p className="mt-1 text-xs text-gray-500">
-            Sistem Informasi Manajemen Klinik Terintegrasi
-          </p>
+        <div className="text-center mt-6 text-xs text-gray-500">
+          © 2026 MediCare
         </div>
       </div>
-
-      <style>{`
-        @keyframes blob {
-          0%, 100% {
-            transform: translate(0, 0) scale(1);
-          }
-          33% {
-            transform: translate(30px, -50px) scale(1.1);
-          }
-          66% {
-            transform: translate(-20px, 20px) scale(0.9);
-          }
-        }
-        .animate-blob {
-          animation: blob 7s infinite;
-        }
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-      `}</style>
     </div>
   );
 }

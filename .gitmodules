@@ -1,0 +1,4 @@
+[submodule "openapi"]
+	path = openapi
+	url = git@github.com:HADI-Group/clinic-api-contract.git
+	branch = dev
