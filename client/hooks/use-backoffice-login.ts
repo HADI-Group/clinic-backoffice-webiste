@@ -33,7 +33,7 @@ export function useBackOfficeLogin() {
   const demoLogin = async () => {
     setIsLoading(true);
     try {
-      await loginBackOffice("demo@medicare.local", "demo123");
+      await loginBackOffice("super@admin.com", "Password@1");
 
       toast({
         title: "Demo Mode",

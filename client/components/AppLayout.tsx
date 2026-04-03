@@ -14,12 +14,12 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
   return (
     <div className="flex h-screen bg-background">
-      {/* Sidebar for desktop */}
+      {/* Desktop Sidebar */}
       <div className="hidden lg:block">
         <Sidebar currentPath={location.pathname} />
       </div>
 
-      {/* Mobile sidebar overlay */}
+      {/* Mobile overlay */}
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black/50 z-30 lg:hidden"
@@ -27,7 +27,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
         />
       )}
 
-      {/* Mobile sidebar */}
+      {/* Mobile Sidebar */}
       <div
         className={`fixed top-0 left-0 h-screen w-64 z-40 lg:hidden transform transition-transform duration-300 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
@@ -36,9 +36,9 @@ export default function AppLayout({ children }: AppLayoutProps) {
         <Sidebar currentPath={location.pathname} />
       </div>
 
-      {/* Main content */}
+      {/* Main Layout */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Mobile header */}
+        {/* Mobile Header */}
         <div className="lg:hidden bg-white border-b border-border px-4 py-3 flex items-center justify-between">
           <Button
             variant="ghost"
@@ -52,10 +52,14 @@ export default function AppLayout({ children }: AppLayoutProps) {
               <Menu className="w-6 h-6" />
             )}
           </Button>
+
           <span className="font-semibold text-foreground">Sindang Klinik</span>
+
           <div className="w-10" />
         </div>
-        {children}
+
+        {/* Scrollable Content Area */}
+        <main className="flex-1 overflow-y-auto p-4">{children}</main>
       </div>
     </div>
   );

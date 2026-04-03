@@ -155,10 +155,10 @@ export default function Login() {
             </p>
             <div className="text-xs bg-blue-50 rounded-lg p-3 border">
               <div>
-                <b>Email:</b> demo@medicare.local
+                <b>Email:</b> super@admin.com
               </div>
               <div>
-                <b>Password:</b> demo123
+                <b>Password:</b> Password@1
               </div>
             </div>
           </div>

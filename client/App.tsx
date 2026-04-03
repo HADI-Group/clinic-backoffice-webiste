@@ -17,6 +17,7 @@ import Reports from "./pages/Reports";
 import MasterData from "./pages/MasterData";
 import AppLayout from "./components/AppLayout";
 import NotFound from "./pages/NotFound";
+import { getBackOfficeToken } from "@/api/back_office/token.store.ts";
 
 const queryClient = new QueryClient();
 
@@ -27,7 +28,7 @@ function ProtectedRoute({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // Check if user has auth token
-    const token = localStorage.getItem("authToken");
+    const token = getBackOfficeToken()
     setIsAuthenticated(!!token);
     setIsLoading(false);
   }, []);
