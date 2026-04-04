@@ -9,6 +9,8 @@ RUN npm install
 COPY . .
 
 # Build Vite → dist/spa
+ARG VITE_BACKOFFICE_API_URL
+ENV VITE_BACKOFFICE_API_URL=$VITE_BACKOFFICE_API_URL
 RUN npm run build
 
 
