@@ -1,38 +1,30 @@
-# ---------- Stage 1: Build ----------
+# ===== BUILD STAGE =====
 FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-RUN corepack enable && corepack prepare pnpm@latest --activate
-
-COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile
+COPY package*.json ./
+RUN npm install
 
 COPY . .
-RUN pnpm build
 
-# ---------- Stage 2: Production ----------
-FROM node:20-alpine
+# Build Vite (generate dist/spa)
+RUN npm run build
 
-WORKDIR /app
 
-RUN corepack enable && corepack prepare pnpm@latest --activate
+# ===== PRODUCTION STAGE =====
+FROM nginx:alpine
 
-COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --prod --frozen-lockfile
+# Copy hasil build ke nginx
+COPY --from=builder /app/dist/spa /usr/share/nginx/html
 
-# copy build
-COPY --from=builder /app/dist ./dist
+# Optional: custom nginx config
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# copy entrypoint
-COPY entrypoint.sh ./entrypoint.sh
+# Copy entrypoint
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
-# give permission
-RUN chmod +x entrypoint.sh
+EXPOSE 80
 
-ENV NODE_ENV=production
-ENV PORT=3000
-
-EXPOSE 3000
-
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["/entrypoint.sh"]

@@ -1,18 +1,10 @@
 #!/bin/sh
 set -e
 
-echo "🚀 Starting Fusion Starter..."
-
-# Optional: wait for dependencies (DB, etc.)
-# echo "⏳ Waiting for DB..."
-# sleep 5
-
-# Optional: run migration
-# pnpm prisma migrate deploy
+echo "🚀 Starting Frontend (Vite + Nginx)..."
 
 # Debug env
-echo "NODE_ENV=$NODE_ENV"
-echo "PORT=$PORT"
+echo "API URL: $VITE_BACKOFFICE_API_URL"
 
-# Start app
-exec node dist/server/node-build.mjs
+# Start nginx
+exec nginx -g "daemon off;"
