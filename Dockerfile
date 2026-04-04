@@ -8,17 +8,17 @@ RUN npm install
 
 COPY . .
 
-# Build Vite (generate dist/spa)
+# Build Vite → dist/spa
 RUN npm run build
 
 
 # ===== PRODUCTION STAGE =====
 FROM nginx:alpine
 
-# Copy hasil build ke nginx
+# Copy hasil build
 COPY --from=builder /app/dist/spa /usr/share/nginx/html
 
-# Optional: custom nginx config
+# Copy nginx config
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copy entrypoint
