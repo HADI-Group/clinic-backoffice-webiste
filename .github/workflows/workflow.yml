@@ -33,7 +33,10 @@ jobs:
       # 4. Build
       - name: Build Docker image
         run: |
-          docker build -t $IMAGE_NAME:staging .
+          docker build \
+            --build-arg VITE_BACKOFFICE_API_URL=${{ secrets.VITE_BACKOFFICE_API_URL }} \
+            -t $IMAGE_NAME:staging .
+
           docker tag $IMAGE_NAME:staging $IMAGE_NAME:${{ github.sha }}
 
       # 5. Push
