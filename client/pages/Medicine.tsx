@@ -16,6 +16,7 @@ export default function Medicine() {
   const [selectedMedicine, setSelectedMedicine] = useState<Medicine | null>(null);
   const [stockAction, setStockAction] = useState<"in" | "out" | null>(null);
   const [stockQuantity, setStockQuantity] = useState("");
+  const [priceUnitValue, setPriceUnitValue] = useState("");
   const [stockReason, setStockReason] = useState("");
 
   const filteredMedicines = useMemo(() => {
@@ -88,7 +89,9 @@ export default function Medicine() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
             <p className="text-sm text-blue-600 font-medium">Total Obat</p>
-            <p className="text-3xl font-bold text-blue-900">{medicines.length}</p>
+            <p className="text-3xl font-bold text-blue-900">
+              {medicines.length}
+            </p>
           </div>
           <div className="bg-green-50 p-4 rounded-lg border border-green-200">
             <p className="text-sm text-green-600 font-medium">Total Stok</p>
@@ -103,9 +106,18 @@ export default function Medicine() {
             </p>
           </div>
           <div className="bg-purple-50 p-4 rounded-lg border border-purple-200">
-            <p className="text-sm text-purple-600 font-medium">Total Nilai Stok</p>
+            <p className="text-sm text-purple-600 font-medium">
+              Total Nilai Stok
+            </p>
             <p className="text-3xl font-bold text-purple-900">
-              Rp {(medicines.reduce((sum, m) => sum + m.stock * m.pricePerUnit, 0) / 1000000).toFixed(1)}M
+              Rp{" "}
+              {(
+                medicines.reduce(
+                  (sum, m) => sum + m.stock * m.pricePerUnit,
+                  0,
+                ) / 1000000
+              ).toFixed(1)}
+              M
             </p>
           </div>
         </div>
@@ -188,6 +200,16 @@ export default function Medicine() {
                   placeholder="Harga per Unit"
                   className="px-3 py-2 border border-border rounded-md text-foreground"
                 />
+                <input
+                  type="number"
+                  placeholder="Jumlah Obat"
+                  className="px-3 py-2 border border-border rounded-md text-foreground"
+                />
+                <input
+                  type="number"
+                  placeholder="Minimal Stok"
+                  className="px-3 py-2 border border-border rounded-md text-foreground"
+                />
               </div>
               <div className="mt-4 flex gap-2">
                 <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
@@ -207,7 +229,8 @@ export default function Medicine() {
           {selectedMedicine && stockAction && (
             <div className="bg-white rounded-lg border border-border p-6 mb-6">
               <h2 className="text-lg font-semibold text-foreground mb-4">
-                {stockAction === "in" ? "Masuk Stok" : "Keluar Stok"} - {selectedMedicine.name}
+                {stockAction === "in" ? "Masuk Stok" : "Keluar Stok"} -{" "}
+                {selectedMedicine.name}
               </h2>
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
@@ -232,7 +255,28 @@ export default function Medicine() {
                     />
                   </div>
                 </div>
-
+                <div className="grid grid-cols-2 gap-4">
+                  {/*<div>*/}
+                  {/*  <label className="text-sm font-medium text-foreground block mb-2">*/}
+                  {/*    Harga Per Unit Saat Ini*/}
+                  {/*  </label>*/}
+                  {/*  <p className="text-2xl font-bold text-foreground">*/}
+                  {/*   Rp. {selectedMedicine.pricePerUnit}*/}
+                  {/*  </p>*/}
+                  {/*</div>*/}
+                  <div>
+                    <label className="text-sm font-medium text-foreground block mb-2">
+                      Harga *
+                    </label>
+                    <input
+                      type="number"
+                      value={priceUnitValue}
+                      onChange={(e) => setPriceUnitValue(e.target.value)}
+                      className="w-full px-3 py-2 border border-border rounded-md text-foreground"
+                      min="1"
+                    />
+                  </div>
+                </div>
                 <div>
                   <label className="text-sm font-medium text-foreground block mb-2">
                     Alasan *
@@ -262,10 +306,15 @@ export default function Medicine() {
 
                 <div className="bg-gray-50 p-3 rounded-lg">
                   <p className="text-sm text-foreground">
-                    Stok Baru: <span className="font-bold">
+                    Stok Baru:{" "}
+                    <span className="font-bold">
                       {stockAction === "in"
                         ? selectedMedicine.stock + parseInt(stockQuantity || 0)
-                        : Math.max(0, selectedMedicine.stock - parseInt(stockQuantity || 0))}
+                        : Math.max(
+                            0,
+                            selectedMedicine.stock -
+                              parseInt(stockQuantity || 0),
+                          )}
                     </span>
                   </p>
                 </div>
@@ -326,7 +375,10 @@ export default function Medicine() {
               </thead>
               <tbody className="bg-white">
                 {filteredMedicines.map((medicine) => (
-                  <tr key={medicine.id} className="border-b border-border hover:bg-gray-50">
+                  <tr
+                    key={medicine.id}
+                    className="border-b border-border hover:bg-gray-50"
+                  >
                     <td className="px-4 py-3 text-foreground font-medium">
                       {medicine.name}
                     </td>

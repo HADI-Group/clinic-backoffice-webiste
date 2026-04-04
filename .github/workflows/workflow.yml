@@ -1,0 +1,72 @@
+name: CI/CD Deploy to VPS (STAGING)
+
+on:
+  push:
+    branches:
+      - staging
+
+permissions:
+  contents: read
+  packages: write   # ✅ WAJIB
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment: staging
+
+    steps:
+      # 1. Checkout
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Set IMAGE_NAME (lowercase)
+      - name: Set IMAGE_NAME
+        run: |
+          IMAGE_NAME=ghcr.io/$(echo "${{ github.repository_owner }}/clinic-backoffice-webiste" | tr '[:upper:]' '[:lower:]')
+          echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_ENV
+
+      # 3. Login to GHCR (PAKAI PAT ✅)
+      - name: Login to GHCR
+        run: |
+          echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      # 4. Build
+      - name: Build Docker image
+        run: |
+          docker build -t $IMAGE_NAME:staging .
+          docker tag $IMAGE_NAME:staging $IMAGE_NAME:${{ github.sha }}
+
+      # 5. Push
+      - name: Push Docker image
+        run: |
+          docker push $IMAGE_NAME:staging
+          docker push $IMAGE_NAME:${{ github.sha }}
+
+      # 6. Deploy
+      - name: Deploy to VPS (Staging)
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            echo "🚀 Deploying STAGING..."
+
+            IMAGE_NAME=ghcr.io/$(echo "${{ github.repository_owner }}/clinic-backoffice-webiste" | tr '[:upper:]' '[:lower:]')
+
+            echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+            docker pull $IMAGE_NAME:staging
+
+            docker stop clinic-backoffice-webiste-staging || true
+            docker rm clinic-backoffice-webiste-staging || true
+
+            docker run -d \
+              --name clinic-backoffice-webiste-staging \
+              -p 7777:7777 \
+              --network app-network \
+              --env-file /home/enkei/projects/hadi-group/clinic/clinic-website/.staging.env \
+              --restart always \
+              $IMAGE_NAME:staging
+
+            echo "✅ STAGING Deployment Done"
