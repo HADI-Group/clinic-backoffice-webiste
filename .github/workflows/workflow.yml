@@ -63,7 +63,7 @@ jobs:
 
             docker run -d \
               --name clinic-backoffice-webiste-staging \
-              -p 7777:7777 \
+              -p 7777:80 \
               --network app-network \
               --env-file /home/enkei/projects/hadi-group/clinic/clinic-website/.staging.env \
               --restart always \
