@@ -6,6 +6,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd());
 
   return {
+    base: env.VITE_BASE || "/", // ✅ ADD THIS
     server: {
       host: "::",
       port: Number(env.VITE_PORT) || 8080, // ✅ from env

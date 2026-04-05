@@ -34,8 +34,9 @@ jobs:
       - name: Build Docker image
         run: |
           docker build \
-            --build-arg VITE_BACKOFFICE_API_URL=${{ secrets.VITE_BACKOFFICE_API_URL }} \
-            -t $IMAGE_NAME:staging .
+          --build-arg VITE_BACKOFFICE_API_URL=${{ secrets.VITE_BACKOFFICE_API_URL }} \
+          --build-arg VITE_BASE=${{ secrets.VITE_BASE }} \
+          -t $IMAGE_NAME:staging .
 
           docker tag $IMAGE_NAME:staging $IMAGE_NAME:${{ github.sha }}
 
